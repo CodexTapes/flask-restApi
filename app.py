@@ -1,14 +1,14 @@
 from flask import Flask
-from flask_restplus import Api, Resource, fields
+from flask_restplus import Api, Resource, fields, marshal_with
 
 application = Flask(__name__)
-app = Api(app = application,
+app = Api(app=application,
           version='1.0',
           title='Apartment Rental Api',
           description='Flask Swagger Apartment Rental Api',
           )
 
-apthunter = app.namespace('apartments', description='Find An Apartment Today!')
+apartments = app.namespace('apartments', description='Api Operations Tour!')
 
 model = app.model('Apartment Model', {
     'rent': fields.Integer(description='Monthly Rental Cost'),
@@ -19,16 +19,19 @@ model = app.model('Apartment Model', {
 })
 
 
-@apthunter.route('/')
+@apartments.route('/')
 class ApartmentsList(Resource):
+    @apartments.marshal_with(model)
     def get(self):
         return {'hello': 'world'}
 
+    @apartments.expect(model, validate=True)
+    @apartments.marshal_with(model)
     def post(self):
         return {"status": "Posted new data"}
 
 
-@apthunter.route('/<int:id>')
+@apartments.route('/<int:id>')
 class Apartments(Resource):
     def get(self):
         return {'hello': 'world'}
@@ -38,6 +41,7 @@ class Apartments(Resource):
 
     def delete(self):
         return {'status': 'something got deleted'}
+
 
 if __name__ == '__main__':
     app.run(debug=True)
