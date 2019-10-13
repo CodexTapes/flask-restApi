@@ -1,3 +1,4 @@
+flask
 flask-restplus==0.13.0
   - aniso8601 [required: >=0.82, installed: 8.0.0]
   - Flask [required: >=0.8, installed: 1.1.1]
